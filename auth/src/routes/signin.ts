@@ -1,10 +1,9 @@
 import express, { Request, Response } from 'express'
 import { body } from 'express-validator'
 import jwt from 'jsonwebtoken'
+import { validateRequest, BadRequestError } from '@obrmtikets/common'
 
 import { User } from '../models/user'
-import { validateRequest } from '../middlewares/validate-request'
-import { BadRequestError } from '../errors/bad-request-error'
 import { PasswordManager } from '../services/passwordManager'
 
 const router = express.Router()
