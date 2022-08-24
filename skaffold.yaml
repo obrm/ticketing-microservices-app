@@ -6,7 +6,7 @@ deploy:
       - ./infra/k8s/*
 build:
   local:
-    push: false  
+    push: false
   artifacts:
     - image: oribaram/auth
       context: auth
@@ -23,4 +23,12 @@ build:
       sync:
         manual:
           - src: '**/*.js'
+            dest: .
+    - image: oribaram/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
             dest: .
