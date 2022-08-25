@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import request from 'supertest'
 import { app } from '../app'
 import jwt from 'jsonwebtoken'
+import { generateId } from './../utils/generate-id'
 
 declare global {
   function signin(): string[]
@@ -36,8 +37,10 @@ afterAll(async () => {
 })
 
 global.signin = () => {
+  const id = generateId()
+
   const payload = {
-    id: 'd4d5d5d',
+    id,
     email: 'test@test.com',
   }
 
