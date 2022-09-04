@@ -3,6 +3,7 @@ import { app } from '../../app'
 import { generateId } from './../../utils/generate-id'
 import { createTicket } from './../../utils/create-ticket'
 import { updateTicket } from './../../utils/update-ticket'
+import { natsWrapper } from '../../nats-wrapper'
 
 it('returns a 404 if the provided id does not exists', async () => {
   const id = generateId()
@@ -91,4 +92,29 @@ it('updates the ticket provided valid inputs', async () => {
 
   expect(updatedResponse.body.title).toEqual(title)
   expect(updatedResponse.body.price).toEqual(price)
+})
+
+it('publishes an event', async () => {
+  const cookie = signin()
+
+  const response = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', cookie)
+    .send({
+      title: 'what ever',
+      price: 20,
+    })
+
+  const title = 'new title'
+  const price = 10
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title,
+      price,
+    })
+  
+    expect(natsWrapper.client.publish).toHaveBeenCalled()  
 })
